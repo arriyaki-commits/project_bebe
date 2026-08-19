@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#f4b41a">
+	<title>เข้าสู่ระบบ | Honey Bee</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Kanit:wght@400;500;600&display=swap');
+
+		:root {
+			--ink: #20201d;
+			--muted: #77736b;
+			--cream: #fffaf0;
+			--honey: #f4b41a;
+			--honey-dark: #d98d00;
+			--line: #e8e1d4;
+			--error: #bb4a3e;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			color: var(--ink);
+			background: #f7eedc;
+			font-family: 'DM Sans', 'Kanit', sans-serif;
+		}
+
+		.page {
+			display: grid;
+			grid-template-columns: minmax(320px, 0.9fr) minmax(440px, 1.1fr);
+			min-height: 100vh;
+			overflow: hidden;
+		}
+
+		.welcome-panel {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: clamp(32px, 6vw, 76px);
+			color: #fffdf6;
+			background: #25241f;
+			overflow: hidden;
+		}
+
+		.welcome-panel::before,
+		.welcome-panel::after {
+			position: absolute;
+			content: '';
+			width: 380px;
+			height: 330px;
+			border: 1px solid rgba(244, 180, 26, .22);
+			transform: rotate(30deg);
+			pointer-events: none;
+		}
+
+		.welcome-panel::before { right: -180px; top: 17%; box-shadow: 70px 120px 0 -1px rgba(244, 180, 26, .08), -90px 180px 0 -1px rgba(244, 180, 26, .08); }
+		.welcome-panel::after { left: -250px; bottom: -190px; border-color: rgba(255, 255, 255, .08); }
+
+		.brand {
+			z-index: 1;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			color: var(--honey);
+			font-weight: 700;
+			letter-spacing: .08em;
+			text-transform: uppercase;
+		}
+
+		.brand-mark {
+			display: grid;
+			width: 38px;
+			height: 38px;
+			place-items: center;
+			color: var(--ink);
+			background: var(--honey);
+			clip-path: polygon(25% 7%, 75% 7%, 100% 50%, 75% 93%, 25% 93%, 0 50%);
+			font-size: 19px;
+		}
+
+		.welcome-copy { z-index: 1; max-width: 450px; margin: auto 0; }
+
+		.eyebrow {
+			margin: 0 0 18px;
+			color: #f5c754;
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: .17em;
+			text-transform: uppercase;
+		}
+
+		h1 {
+			max-width: 410px;
+			margin: 0;
+			font-family: 'Kanit', 'DM Sans', sans-serif;
+			font-size: clamp(38px, 5vw, 68px);
+			font-weight: 500;
+			line-height: 1.05;
+			letter-spacing: 0;
+		}
+
+		.welcome-copy p:not(.eyebrow) {
+			max-width: 350px;
+			margin: 25px 0 0;
+			color: #c8c3b8;
+			font-size: 15px;
+			line-height: 1.8;
+		}
+
+		.panel-footer {
+			z-index: 1;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			color: #9c978b;
+			font-size: 12px;
+		}
+
+		.panel-footer span { width: 28px; height: 1px; background: var(--honey); }
+
+		.form-panel {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 48px clamp(28px, 8vw, 110px);
+			background: var(--cream);
+		}
+
+		.login-box { width: min(100%, 400px); animation: rise-in .7s ease both; }
+
+		.form-heading { margin-bottom: 38px; }
+		.form-heading h2 { margin: 0 0 8px; font-family: 'Kanit', sans-serif; font-size: 34px; font-weight: 500; letter-spacing: 0; }
+		.form-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+
+		.field { position: relative; margin-bottom: 21px; }
+		.field label { display: block; margin-bottom: 8px; color: #403d37; font-size: 13px; font-weight: 600; }
+		.field input {
+			width: 100%;
+			height: 52px;
+			padding: 0 16px;
+			border: 1px solid var(--line);
+			border-radius: 8px;
+			outline: none;
+			color: var(--ink);
+			background: #fff;
+			font: inherit;
+			transition: border-color .2s, box-shadow .2s;
+		}
+		.field input:focus { border-color: var(--honey-dark); box-shadow: 0 0 0 4px rgba(244, 180, 26, .16); }
+		.field input.invalid { border-color: var(--error); }
+		.field input[type="password"], .field input.has-toggle { padding-right: 52px; }
+
+		.toggle-password {
+			position: absolute;
+			right: 12px;
+			bottom: 12px;
+			display: grid;
+			width: 28px;
+			height: 28px;
+			padding: 0;
+			place-items: center;
+			border: 0;
+			color: #8c867c;
+			background: transparent;
+			cursor: pointer;
+		}
+		.toggle-password:hover { color: var(--ink); }
+
+		.form-options { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 29px; font-size: 13px; }
+		.remember { display: flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; }
+		.remember input { accent-color: var(--honey-dark); }
+		a { color: var(--honey-dark); font-weight: 600; text-decoration: none; }
+		a:hover { text-decoration: underline; }
+
+		.submit-button {
+			width: 100%;
+			height: 54px;
+			border: 0;
+			border-radius: 8px;
+			color: #211d14;
+			background: var(--honey);
+			box-shadow: 0 8px 18px rgba(217, 141, 0, .18);
+			cursor: pointer;
+			font: inherit;
+			font-weight: 700;
+			transition: background .2s, transform .2s, box-shadow .2s;
+		}
+		.submit-button:hover { background: #ffc533; box-shadow: 0 11px 22px rgba(217, 141, 0, .25); transform: translateY(-2px); }
+		.submit-button:active { transform: translateY(0); }
+		.form-message { min-height: 20px; margin: 14px 0 0; color: var(--error); font-size: 13px; text-align: center; }
+		.signup { margin: 34px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+
+		@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+		@media (max-width: 760px) {
+			.page { display: block; }
+			.welcome-panel { min-height: 300px; padding: 28px; }
+			.welcome-copy { margin: 42px 0 24px; }
+			.welcome-copy p:not(.eyebrow) { margin-top: 14px; line-height: 1.6; }
+			h1 { font-size: 42px; }
+			.panel-footer { display: none; }
+			.form-panel { min-height: calc(100vh - 300px); padding: 44px 28px 52px; }
+			.form-heading { margin-bottom: 30px; }
+		}
+	</style>
+</head>
+<body>
+	<main class="page">
+		<section class="welcome-panel" aria-label="เกี่ยวกับระบบ">
+			<div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> Honey Bee</div>
+			<div class="welcome-copy">
+				<p class="eyebrow">Information System</p>
+				<h1>ยินดีต้อนรับ<br>กลับมาอีกครั้ง</h1>
+				<p>จัดการข้อมูลของคุณได้ง่าย รวดเร็ว และเป็นระเบียบในทุกวัน</p>
+			</div>
+			<div class="panel-footer"><span></span> ระบบจัดการข้อมูลที่ไว้ใจได้</div>
+		</section>
+
+		<section class="form-panel">
+			<div class="login-box">
+				<div class="form-heading">
+					<h2>เข้าสู่ระบบ</h2>
+					<p>กรอกข้อมูลเพื่อเข้าสู่พื้นที่ของคุณ</p>
+				</div>
+				<form id="loginForm" novalidate>
+					<div class="field">
+						<label for="email">อีเมล</label>
+						<input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required>
+					</div>
+					<div class="field">
+						<label for="password">รหัสผ่าน</label>
+						<input id="password" name="password" class="has-toggle" type="password" placeholder="กรอกรหัสผ่านของคุณ" autocomplete="current-password" required>
+						<button class="toggle-password" id="togglePassword" type="button" aria-label="แสดงรหัสผ่าน" title="แสดงรหัสผ่าน">◉</button>
+					</div>
+					<div class="form-options">
+						<label class="remember"><input type="checkbox" name="remember"> จดจำฉันไว้</label>
+						<a href="#" id="forgotPassword">ลืมรหัสผ่าน?</a>
+					</div>
+					<button class="submit-button" type="submit">เข้าสู่ระบบ <span aria-hidden="true">→</span></button>
+					<p class="form-message" id="formMessage" role="alert"></p>
+				</form>
+				<p class="signup">ยังไม่มีบัญชี? <a href="#" id="createAccount">สร้างบัญชีใหม่</a></p>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const loginForm = document.getElementById('loginForm');
+		const emailInput = document.getElementById('email');
+		const passwordInput = document.getElementById('password');
+		const formMessage = document.getElementById('formMessage');
+		const togglePassword = document.getElementById('togglePassword');
+
+		togglePassword.addEventListener('click', () => {
+			const isPassword = passwordInput.type === 'password';
+			passwordInput.type = isPassword ? 'text' : 'password';
+			togglePassword.textContent = isPassword ? '○' : '◉';
+			togglePassword.setAttribute('aria-label', isPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+			togglePassword.title = isPassword ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน';
+		});
+
+		loginForm.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const emailIsValid = emailInput.validity.valid;
+			const passwordIsValid = passwordInput.value.trim().length > 0;
+			emailInput.classList.toggle('invalid', !emailIsValid);
+			passwordInput.classList.toggle('invalid', !passwordIsValid);
+
+			if (!emailIsValid || !passwordIsValid) {
+				formMessage.textContent = 'กรุณากรอกอีเมลและรหัสผ่านให้ครบถ้วน';
+				(!emailIsValid ? emailInput : passwordInput).focus();
+				return;
+			}
+
+			formMessage.style.color = '#6a7c35';
+			formMessage.textContent = 'กำลังตรวจสอบข้อมูล...';
+		});
+
+		[emailInput, passwordInput].forEach((input) => {
+			input.addEventListener('input', () => {
+				input.classList.remove('invalid');
+				formMessage.textContent = '';
+				formMessage.style.color = '';
+			});
+		});
+
+		document.getElementById('forgotPassword').addEventListener('click', (event) => {
+			event.preventDefault();
+			formMessage.style.color = '#77736b';
+			formMessage.textContent = 'กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน';
+		});
+
+		document.getElementById('createAccount').addEventListener('click', (event) => {
+			event.preventDefault();
+			formMessage.style.color = '#77736b';
+			formMessage.textContent = 'การสร้างบัญชีใหม่จะเปิดให้บริการเร็ว ๆ นี้';
+		});
+	</script>
+</body>
+</html>

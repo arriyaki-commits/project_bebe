@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#f4b41a">
+	<title>สร้างบัญชี | Honey Bee</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Kanit:wght@400;500;600&display=swap');
+		:root { --ink: #20201d; --muted: #77736b; --cream: #fffaf0; --honey: #f4b41a; --honey-dark: #d98d00; --line: #e8e1d4; --error: #bb4a3e; --success: #39785a; }
+		* { box-sizing: border-box; }
+		body { margin: 0; min-height: 100vh; color: var(--ink); background: #f7eedc; font-family: 'DM Sans', 'Kanit', sans-serif; }
+		.page { display: grid; grid-template-columns: minmax(320px, .9fr) minmax(460px, 1.1fr); min-height: 100vh; overflow: hidden; }
+		.welcome-panel { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: clamp(32px, 6vw, 76px); color: #fffdf6; background: #25241f; overflow: hidden; }
+		.welcome-panel::before, .welcome-panel::after { position: absolute; content: ''; width: 380px; height: 330px; border: 1px solid rgba(244,180,26,.22); transform: rotate(30deg); pointer-events: none; }
+		.welcome-panel::before { right: -180px; top: 17%; box-shadow: 70px 120px 0 -1px rgba(244,180,26,.08), -90px 180px 0 -1px rgba(244,180,26,.08); }
+		.welcome-panel::after { left: -250px; bottom: -190px; border-color: rgba(255,255,255,.08); }
+		.brand { z-index: 1; display: flex; align-items: center; gap: 12px; color: var(--honey); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+		.brand-mark { display: grid; width: 38px; height: 38px; place-items: center; color: var(--ink); background: var(--honey); clip-path: polygon(25% 7%,75% 7%,100% 50%,75% 93%,25% 93%,0 50%); font-size: 19px; }
+		.welcome-copy { z-index: 1; max-width: 450px; margin: auto 0; }
+		.eyebrow { margin: 0 0 18px; color: #f5c754; font-size: 12px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; }
+		h1 { max-width: 410px; margin: 0; font-family: 'Kanit', sans-serif; font-size: clamp(38px, 5vw, 68px); font-weight: 500; line-height: 1.05; }
+		.welcome-copy p:not(.eyebrow) { max-width: 350px; margin: 25px 0 0; color: #c8c3b8; font-size: 15px; line-height: 1.8; }
+		.benefits { z-index: 1; display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; color: #d4cec1; font-size: 13px; }
+		.benefits li { display: flex; align-items: center; gap: 10px; }
+		.benefits li::before { display: grid; width: 20px; height: 20px; place-items: center; border: 1px solid #80621a; border-radius: 50%; color: var(--honey); content: '✓'; font-size: 11px; }
+		.form-panel { display: flex; align-items: center; justify-content: center; padding: 48px clamp(28px, 8vw, 110px); background: var(--cream); }
+		.register-box { width: min(100%, 440px); animation: rise-in .7s ease both; }
+		.form-heading { margin-bottom: 30px; }
+		.form-heading h2 { margin: 0 0 8px; font-family: 'Kanit', sans-serif; font-size: 34px; font-weight: 500; }
+		.form-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+		.field { position: relative; margin-bottom: 17px; }
+		.field label { display: block; margin-bottom: 8px; color: #403d37; font-size: 13px; font-weight: 600; }
+		.field input { width: 100%; height: 50px; padding: 0 16px; border: 1px solid var(--line); border-radius: 8px; outline: none; color: var(--ink); background: #fff; font: inherit; transition: border-color .2s, box-shadow .2s; }
+		.field input:focus { border-color: var(--honey-dark); box-shadow: 0 0 0 4px rgba(244,180,26,.16); }
+		.field input.invalid { border-color: var(--error); }
+		.field input[type="password"] { padding-right: 52px; }
+		.toggle-password { position: absolute; right: 12px; bottom: 11px; display: grid; width: 28px; height: 28px; padding: 0; place-items: center; border: 0; color: #8c867c; background: transparent; cursor: pointer; }
+		.toggle-password:hover { color: var(--ink); }
+		.password-meter { height: 4px; margin-top: 8px; border-radius: 4px; background: #eee8dc; overflow: hidden; }
+		.password-meter span { display: block; width: 0; height: 100%; background: var(--error); transition: width .25s, background .25s; }
+		.field-hint { display: block; min-height: 17px; margin-top: 6px; color: var(--muted); font-size: 11px; }
+		.terms { display: flex; align-items: flex-start; gap: 9px; margin: 8px 0 24px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+		.terms input { flex: 0 0 auto; margin-top: 3px; accent-color: var(--honey-dark); }
+		a { color: var(--honey-dark); font-weight: 600; text-decoration: none; }
+		a:hover { text-decoration: underline; }
+		.submit-button { width: 100%; height: 54px; border: 0; border-radius: 8px; color: #211d14; background: var(--honey); box-shadow: 0 8px 18px rgba(217,141,0,.18); cursor: pointer; font: inherit; font-weight: 700; transition: background .2s, transform .2s, box-shadow .2s; }
+		.submit-button:hover { background: #ffc533; box-shadow: 0 11px 22px rgba(217,141,0,.25); transform: translateY(-2px); }
+		.submit-button:active { transform: translateY(0); }
+		.form-message { min-height: 20px; margin: 14px 0 0; color: var(--error); font-size: 13px; text-align: center; }
+		.form-message.success { color: var(--success); }
+		.signin { margin: 25px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+		@keyframes rise-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+		@media (max-width: 760px) { .page { display: block; } .welcome-panel { min-height: 340px; padding: 28px; } .welcome-copy { margin: 42px 0 26px; } .welcome-copy p:not(.eyebrow) { margin-top: 14px; line-height: 1.6; } h1 { font-size: 42px; } .benefits { gap: 8px; } .form-panel { min-height: calc(100vh - 340px); padding: 44px 28px 52px; } }
+	</style>
+</head>
+<body>
+	<main class="page">
+		<section class="welcome-panel" aria-label="เกี่ยวกับระบบ"><div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> Honey Bee</div><div class="welcome-copy"><p class="eyebrow">Information System</p><h1>เริ่มต้นพื้นที่<br>ของคุณวันนี้</h1><p>สร้างบัญชีใหม่เพื่อจัดการข้อมูลได้ง่าย รวดเร็ว และเป็นระเบียบในทุกวัน</p></div><ul class="benefits"><li>ใช้งานง่ายและเป็นระบบ</li><li>เข้าถึงข้อมูลของคุณได้ทุกที่</li></ul></section>
+		<section class="form-panel"><div class="register-box"><div class="form-heading"><h2>สร้างบัญชีใหม่</h2><p>กรอกข้อมูลด้านล่างเพื่อเริ่มต้นใช้งาน</p></div><form id="registerForm" novalidate>
+			<div class="field"><label for="name">ชื่อ-นามสกุล</label><input id="name" name="name" type="text" placeholder="เช่น น้ำผึ้ง ใจดี" autocomplete="name" required></div>
+			<div class="field"><label for="email">อีเมล</label><input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" required></div>
+			<div class="field"><label for="password">รหัสผ่าน</label><input id="password" name="password" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" autocomplete="new-password" minlength="8" required><button class="toggle-password" id="togglePassword" type="button" aria-label="แสดงรหัสผ่าน" title="แสดงรหัสผ่าน">◉</button><div class="password-meter" aria-hidden="true"><span id="passwordStrength"></span></div><small class="field-hint" id="passwordHint">ควรมีตัวอักษรและตัวเลขผสมกัน</small></div>
+			<div class="field"><label for="confirmPassword">ยืนยันรหัสผ่าน</label><input id="confirmPassword" name="confirmPassword" type="password" placeholder="กรอกรหัสผ่านอีกครั้ง" autocomplete="new-password" required></div>
+			<label class="terms"><input id="terms" type="checkbox" required><span>ฉันยอมรับ <a href="#">ข้อกำหนดการใช้งาน</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a></span></label><button class="submit-button" type="submit">สร้างบัญชี <span aria-hidden="true">→</span></button><p class="form-message" id="formMessage" role="alert"></p>
+		</form><p class="signin">มีบัญชีอยู่แล้ว? <a href="login.html">เข้าสู่ระบบ</a></p></div></section>
+	</main>
+	<script>
+		const form = document.getElementById('registerForm'); const password = document.getElementById('password'); const confirmPassword = document.getElementById('confirmPassword'); const message = document.getElementById('formMessage'); const strength = document.getElementById('passwordStrength'); const hint = document.getElementById('passwordHint'); const toggle = document.getElementById('togglePassword');
+		password.addEventListener('input', () => { const value = password.value; const score = [value.length >= 8, /[A-Zก-ฮ]/.test(value), /\d/.test(value), /[^A-Za-zก-ฮ\d]/.test(value)].filter(Boolean).length; strength.style.width = `${score * 25}%`; strength.style.background = score < 2 ? 'var(--error)' : score < 4 ? 'var(--honey-dark)' : 'var(--success)'; hint.textContent = value && score < 3 ? 'เพิ่มตัวเลขหรือสัญลักษณ์เพื่อให้รหัสผ่านปลอดภัยขึ้น' : 'ควรมีตัวอักษรและตัวเลขผสมกัน'; });
+		toggle.addEventListener('click', () => { const visible = password.type === 'text'; password.type = visible ? 'password' : 'text'; toggle.textContent = visible ? '◉' : '○'; toggle.setAttribute('aria-label', visible ? 'แสดงรหัสผ่าน' : 'ซ่อนรหัสผ่าน'); });
+		form.addEventListener('submit', (event) => { event.preventDefault(); [...form.querySelectorAll('input[required]')].forEach(input => input.classList.toggle('invalid', !input.checkValidity())); if (!form.checkValidity()) { message.className = 'form-message'; message.textContent = 'กรุณากรอกข้อมูลให้ครบถ้วน'; return; } if (password.value !== confirmPassword.value) { confirmPassword.classList.add('invalid'); message.className = 'form-message'; message.textContent = 'รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง'; return; } message.className = 'form-message success'; message.textContent = 'สร้างบัญชีสำเร็จแล้ว'; });
+	</script>
+</body>
+</html>
